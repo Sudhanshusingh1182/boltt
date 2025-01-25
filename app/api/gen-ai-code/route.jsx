@@ -1,8 +1,10 @@
 import { genAICode } from "@/configs/AiModel";
 import { NextResponse } from "next/server";
 
-export async function POST(req){
+export const maxDuration = 60 ;
 
+export async function POST(req){
+    
     const {prompt} = await req.json();
 
     try {
