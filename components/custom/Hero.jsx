@@ -28,6 +28,8 @@ function Hero() {
   const onGenerate = async(input) => {
       if(!userDetail?.name){
         setOpenDialog(true); 
+        console.log("User detail before login is: ",userDetail);
+        
         return;
       }
       
@@ -40,15 +42,25 @@ function Hero() {
         role:'user', 
         content:input
       }
+      //Till this point , we are sure that the user has surely logged in and hence userDetail won't be null.
+      console.log("User after login is: ",userDetail);
+      
       
         setMessages(msg);
+
+        const userId = userDetail?._id;  // Or userDetail?.uid, depending on your schema
+
+        if (!userId) {
+            toast.error('User ID is missing');
+            return;
+        }
         
         const workspaceId = await createWorkspace({
            user: userDetail?._id,
            messages: [msg]
         })
 
-        //console.log(workspaceId);
+        console.log(workspaceId);
         router.push(`/workspace/${workspaceId}`)
         
   }

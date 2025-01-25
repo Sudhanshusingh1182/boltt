@@ -1,108 +1,103 @@
-import Image from 'next/image'
-import React, { useContext } from 'react'
-import { Button } from '../ui/button'
-import Colors from '@/data/Colors'
-import { UserDetailContext } from '@/context/UserDetailContext'
-import Link from 'next/link'
-import { useSidebar } from '../ui/sidebar'
-import { ActionContext } from '@/context/ActionContext'
-import { usePathname } from 'next/navigation'
-import { LucideDownload, Rocket } from 'lucide-react'
-import { useMutation } from 'convex/react'
-import { useGoogleLogin } from '@react-oauth/google'
-import { api } from '@/convex/_generated/api'
-import axios from 'axios'
-import uuid4 from 'uuid4'
+import Image from "next/image";
+import { Button } from "../ui/button";
+import { useContext, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { DownloadIcon, RocketIcon } from "lucide-react";
+import { useSidebar } from "../ui/sidebar";
+import { ActionContext } from "@/context/ActionContext";
+import SignInDialog from "./SignInDialog";
+import { UserDetailContext } from "@/context/UserDetailContext";
 
-function Header() {
-  const {userDetail, setUserDetail}= useContext(UserDetailContext);
-  const {toggleSidebar} = useSidebar();
-  const {action, setAction} = useContext(ActionContext);
-  const path = usePathname();
- // console.log(path?.includes('workspace'));
-  const createUser = useMutation(api.users.createUser);
+const Header = () => {
+    const { userDetail } = useContext(UserDetailContext);
+    const { setAction } = useContext(ActionContext);
 
-  const onActionBtn = (action) => {
-     
-    setAction({
-      actionType: action,
-      timeStamp: Date.now()
-    })
-  }
+    const [openDialog, setOpenDialog] = useState(false);
 
-    const googleLogin = useGoogleLogin({
-        onSuccess: async tokenResponse => {
-           // console.log(tokenResponse)
-            const userInfo = await axios.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                {
-                    headers: 
-                    {
-                        Authorization: `Bearer ${tokenResponse.access_token}`
-                    }
-                }
-            );
+    const router = useRouter();
+    const { toggleSidebar } = useSidebar();
+    const path = usePathname();
 
-           // console.log(userInfo);
-            const user = userInfo?.data;
-            await createUser({
-               name: user?.name,
-               email: user?.email,
-               picture: user?.picture,
-               uid: uuid4()
-            })
+    const onAction = async (actionName) => {
+        setAction({
+            actionType: actionName,
+            timeStamp: Date.now(),
+        });
+    };
 
-            //save this on the local storage too 
-            if(typeof window !== 'undefined'){
-               localStorage.setItem('user',JSON.stringify(user))
-            }
+    // useEffect(() => {}, [userDetail]);
 
-            setUserDetail(userInfo?.data);
-            
-            //save this inside the database
+    return (
+        <div className="flex p-4 justify-between items-center">
+            <div className="flex gap-2 items-center group cursor-pointer">
+                <Image
+                    src="/logo.png"
+                    alt="ThunderBolt.New"
+                    width={40}
+                    height={40}
+                    className="group-hover:scale-125 transition-transform group-hover:-rotate-6"
+                    onClick={() => router.push("/")}
+                />
+                <h2 className="text-xl lg:text-2xl transition group-hover:translate-x-1 font-bold">
+                    Boltt
+                </h2>
+            </div>
+            {!userDetail?.name && (
+                <div className="flex gap-5" style={{ position: "relative" }}>
+                    <Button
+                        variant="ghost"
+                        onClick={() => {
+                            setOpenDialog(true);
+                        }}
+                        className="hover:bg-gray-500 transition-colors"
+                    >
+                        Sign In
+                    </Button>
+                    {/* <Button
+                        className="hover:bg-blue-900 transition-colors bg-blue-500 text-white hidden md:block"
+                        onClick={() => {
+                            setOpenDialog(true);
+                        }}
+                    >
+                        Get Started
+                    </Button> */}
+                </div>
+            )}
+            {userDetail?.name && (
+                <div className="flex gap-5">
+                    {path !== "/" && path !== "/pricing" && (
+                        <>
+                            <Button
+                                variant="ghost"
+                                onClick={() => onAction("export")}
+                            >
+                                <DownloadIcon /> Export
+                            </Button>
+                            <Button
+                                className="hover:bg-blue-900 transition-colors bg-blue-500 text-white hidden md:inline-flex"
+                                onClick={() => onAction("deploy")}
+                            >
+                                <RocketIcon /> Deploy
+                            </Button>
+                        </>
+                    )}
 
-            
-        },
-        onError: errorResponse => console.log(errorResponse),
-        
-    })
-  
-  return (
-    <div className='p-4 flex justify-between items-center border-b '>
-       <Link href={"/"}>
-        <Image src={'/logo.png'} alt='Logo' width={40} height={40} />
-        </Link>
-        {
-         !userDetail?.name ?
-         <div className='flex gap-5' >
-            <Button onClick={googleLogin} variant='ghost' >Sign In</Button>
-            <Button onClick={googleLogin} className='text-white' style={{backgroundColor: Colors.BLUE }} >Get Started</Button>
-        </div> : 
-        path?.includes('workspace') && <div className='flex gap-2 items-center'>
-          <Button 
-           variant="ghost" 
-           onClick={()=> onActionBtn('export') } >
-           <LucideDownload /> Export 
-          </Button>
-
-          <Button 
-            className="bg-blue-500 text-white hover:bg-blue-600 " 
-            onClick={()=> onActionBtn('deploy') }>
-            <Rocket /> Deploy 
-          </Button>
-
-          {
-            userDetail && 
-              <Image src={userDetail?.picture} alt='user' width={30} height={30} 
-                className='rounded-full w-[30px]'
-                onClick={toggleSidebar}
-              />
-          }
-            
+                    <Image
+                        src={userDetail?.picture}
+                        alt="user"
+                        width={40}
+                        height={40}
+                        className="rounded-full cursor-pointer hover:animate-spin z-10"
+                        onClick={toggleSidebar}
+                    />
+                </div>
+            )}
+            <SignInDialog
+                openDialog={openDialog}
+                closeDialog={(v) => setOpenDialog(v)}
+            />
         </div>
-        }
-    </div>
-  )
-}
+    );
+};
 
-export default Header
+export default Header;
