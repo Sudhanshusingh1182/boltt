@@ -23,7 +23,7 @@ function SignInDialog({openDialog, closeDialog}) {
 
     const googleLogin = useGoogleLogin({
         onSuccess: async tokenResponse => {
-            console.log(tokenResponse)
+           // console.log(tokenResponse)
             const userInfo = await axios.get(
                 'https://www.googleapis.com/oauth2/v3/userinfo',
                 {
@@ -34,7 +34,7 @@ function SignInDialog({openDialog, closeDialog}) {
                 }
             );
 
-            console.log(userInfo);
+           // console.log(userInfo);
             const user = userInfo?.data;
             await createUser({
                name: user?.name,

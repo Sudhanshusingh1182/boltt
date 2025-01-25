@@ -13,7 +13,7 @@ function PricingModel() {
   const onPaymentSuccess = async () => {
     const token = userDetail?.token + Number(selectedOption?.value);
 
-    console.log("TOken : ", token);
+    //console.log("TOken : ", token);
 
     await UpdateToken({
       token: token,
@@ -53,7 +53,7 @@ function PricingModel() {
           <PayPalButtons
             onClick={() => {
                 setSelectedOption(pricing);
-                console.log(pricing.value);
+               // console.log(pricing.value);
               }}
             disabled={!userDetail}
             style={{ layout: "horizontal" }}

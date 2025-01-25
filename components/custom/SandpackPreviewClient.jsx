@@ -16,9 +16,9 @@ function SandpackPreviewClient() {
         const client = previewRef.current?.getClient();
 
         if (client) {
-            console.log("Client is: ", client);
+           // console.log("Client is: ", client);
             const result = await client?.getCodeSandboxURL();
-            console.log(result);
+           // console.log(result);
 
             if (action?.actionType === 'deploy') {
                 const deploymentLink = `https://${result?.sandboxId}.csb.app`;
@@ -29,7 +29,7 @@ function SandpackPreviewClient() {
                 // Copy the deployment link to the clipboard
                 try {
                     await navigator.clipboard.writeText(deploymentLink);
-                    console.log('Link copied to clipboard:', deploymentLink);
+                   // console.log('Link copied to clipboard:', deploymentLink);
                     toast.success('Link copied to clipboard successfully!');
                    // alert('Link copied to clipboard!');
                 } catch (error) {

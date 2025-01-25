@@ -12,7 +12,7 @@ export const createUser = mutation({
         //if user already exists
         
         const user = await ctx.db.query("users").filter((q) => q.eq(q.field("email"), args.email)).collect();
-        console.log(user);
+        //console.log(user);
 
         //if not, then add new user
         if(user?.length == 0){
@@ -24,7 +24,7 @@ export const createUser = mutation({
                  token: 50000
             });
 
-            console.log(result);
+           // console.log(result);
             
         }
     }

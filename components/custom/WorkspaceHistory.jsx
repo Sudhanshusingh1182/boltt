@@ -24,7 +24,7 @@ function WorkspaceHistory() {
         });
         
         setWorkspaceList(result);
-        console.log(result);
+       // console.log(result);
         
     }
   return (

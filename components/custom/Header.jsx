@@ -19,7 +19,7 @@ function Header() {
   const {toggleSidebar} = useSidebar();
   const {action, setAction} = useContext(ActionContext);
   const path = usePathname();
-  console.log(path?.includes('workspace'));
+ // console.log(path?.includes('workspace'));
   const createUser = useMutation(api.users.createUser);
 
   const onActionBtn = (action) => {
@@ -32,7 +32,7 @@ function Header() {
 
     const googleLogin = useGoogleLogin({
         onSuccess: async tokenResponse => {
-            console.log(tokenResponse)
+           // console.log(tokenResponse)
             const userInfo = await axios.get(
                 'https://www.googleapis.com/oauth2/v3/userinfo',
                 {
@@ -43,7 +43,7 @@ function Header() {
                 }
             );
 
-            console.log(userInfo);
+           // console.log(userInfo);
             const user = userInfo?.data;
             await createUser({
                name: user?.name,

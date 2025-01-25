@@ -71,7 +71,7 @@ function CodeView() {
        prompt: PROMPT
     });
 
-    console.log(result.data);
+   // console.log(result.data);
     const aiResp = result.data;
 
     const mergedFiles = {...Lookup.DEFAULT_FILE , ...aiResp?.files}
@@ -84,9 +84,9 @@ function CodeView() {
     const token =Number(userDetail?.token) -Number(countToken(JSON.stringify(aiResp)));
         //update Tokens to Database 
         //console.log("Generated code output in string form", JSON.stringify(aiResp));
-        console.log("Token count consumed for code part is : ", countToken(JSON.stringify(aiResp)));
+       // console.log("Token count consumed for code part is : ", countToken(JSON.stringify(aiResp)));
         
-        console.log("Number of tokens left is :", token);
+       // console.log("Number of tokens left is :", token);
         
          
         await updateTokens({

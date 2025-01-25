@@ -47,7 +47,7 @@ function ChatView() {
       workspaceId: id,
     });
     setMessages(result?.messages);
-    console.log(result);
+    //console.log(result);
   };
 
   useEffect(()=> {
@@ -73,7 +73,7 @@ function ChatView() {
       content: result.data.result
    }
 
-    console.log(result.data.result);
+    //console.log(result.data.result);
     setMessages(prev => [...prev,aiResp]);
 
     
@@ -86,10 +86,10 @@ function ChatView() {
     
     const token =Number(userDetail?.token) -Number(countToken(JSON.stringify(aiResp)));
     //update Tokens to Database 
-    console.log("Generated output in string form", JSON.stringify(aiResp));
-    console.log("Token count consumed for that output is : ", countToken(JSON.stringify(aiResp)));
+   // console.log("Generated output in string form", JSON.stringify(aiResp));
+   // console.log("Token count consumed for that output is : ", countToken(JSON.stringify(aiResp)));
     
-    console.log("Number of tokens left is :", token);
+   // console.log("Number of tokens left is :", token);
     
     setUserDetail(prev => ({
       ...prev,
